@@ -9,19 +9,25 @@ module.exports = function (app) {
 
   app.post("/api/friends", function (req, res) {
     let newUser = req.body;
-    let friendMatch;
+    let userScore = req.body.scores;
+    console.log(userScore);
+    let friendMatch = "";
+    let friendImg = "";
     let difference = 100;
     for (let i in friendsMatch) {
       let diff = 0;
-      for (let j in friendsMatch[i].score) {
-        diff += Math.abs(newUser.score[j] - friendsMatch[i].score[k]);
+      for (var j in userScore) {
+        diff += Math.abs(
+          parseInt(userScore[j]) - parseInt(friendsMatch[i].scores[j])
+        );
       }
       if (diff < difference) {
-        difference = diff;
-        friendMatch = friendsMatch[i];
+        diff = difference;
+        friendMatch = friendsMatch[i].name;
+        friendImg = friendsMatch[i].photo;
       }
     }
     friendsMatch.push(newUser);
-    res.json(friendMatch);
+    res.json({ friend: friendMatch, image: friendImg });
   });
 };
